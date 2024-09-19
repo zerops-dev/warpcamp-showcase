@@ -1,18 +1,35 @@
 zerops:
   - setup: demo
+
     build:
       base: go@1
       buildCommands:
         - go build -o app main.go
       deployFiles: app
+
+    deploy:
+      readinessCheck:
+        httpGet:
+          path: /health
+          port: 8080
+
     run:
       base: alpine@latest
+
       ports:
         - port: 8080
           httpSupport: true
+
       initCommands:
         - zsc execOnce ${ZEROPS_appVersionId} -- ./app migrate up
+
       start: ./app http
+
+      healthCheck:
+        httpGet:
+          port: 8080
+          path: /health
+
       envVariables:
         DB_HOST: ${pgdb_hostname}
         DB_PORT: ${pgdb_port}
