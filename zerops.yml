@@ -1,0 +1,15 @@
+zerops:
+  - setup: demo
+    build:
+      base: go@1
+      buildCommands:
+        - go build -o app main.go
+      deployFiles: app
+    run:
+      base: go@1
+      ports:
+        - port: 8080
+          httpSupport: true
+      initCommands:
+        - zsc execOnce ${ZEROPS_appVersionId} -- ./app migrate up
+      start: ./app http

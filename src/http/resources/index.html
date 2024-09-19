@@ -1,0 +1,41 @@
+<html>
+<head>
+    <title>Warpcamp demo</title>
+</head>
+<body>
+<h1>Connected</h1>
+<textarea id="input" placeholder="message"></textarea>
+<button onclick="send()">Send</button>
+<div id="display"></div>
+<script>
+    let ws = new WebSocket(window.location.pathname);
+
+    window.onbeforeunload = () => {
+        ws.close(1000, "unload");
+    };
+
+    let inputElement = document.getElementById("input");
+    let displayElement = document.getElementById("display");
+
+    ws.onopen = (e) => {
+        console.log("opened", e);
+    };
+    ws.onmessage = (e) => {
+        console.log(e.data);
+        let messageElement = document.createElement("span");
+        messageElement.innerText = e.data;
+        displayElement.appendChild(messageElement);
+        displayElement.appendChild(document.createElement("br"));
+    };
+    ws.onclose = (e) => {
+      console.log("closed", e);
+    };
+
+
+    function send() {
+        ws.send(inputElement.value);
+        inputElement.value = "";
+    }
+</script>
+</body>
+</html>
