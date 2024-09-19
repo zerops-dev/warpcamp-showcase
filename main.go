@@ -7,6 +7,7 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/l-hellmann/sigterm"
 	"github.com/spf13/cobra"
+	"github.com/zerops-dev/warpcamp-showcase/src/control"
 	"github.com/zerops-dev/warpcamp-showcase/src/http"
 	"github.com/zerops-dev/warpcamp-showcase/src/migrate"
 )
@@ -32,6 +33,7 @@ func main() {
 	cmd.AddCommand(
 		migrate.Command(),
 		http.Command(),
+		control.EmptyCommand(),
 	)
 
 	if err := cmd.ExecuteContext(sigterm.Context()); err != nil {

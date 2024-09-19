@@ -29,6 +29,13 @@
     let displayElement = document.getElementById("display");
     let statusElement = document.getElementById("status");
 
+    inputElement.onkeydown = (e) => {
+        if (e.key === "Enter") {
+            e.preventDefault();
+            send();
+        }
+    };
+
     ws.onopen = (e) => {
         statusElement.innerText = "connected";
         statusElement.setAttribute("class", "green");
@@ -47,8 +54,10 @@
         console.log("closed", e);
     };
 
-
     function send() {
+        if (inputElement.value === "") {
+          return
+        }
         ws.send(inputElement.value);
         inputElement.value = "";
     }
