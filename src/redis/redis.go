@@ -1,6 +1,7 @@
 package redis
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"strconv"
@@ -15,7 +16,7 @@ const (
 	EnvPort = "REDIS_PORT"
 )
 
-func NewRedis() (*redis.Client, error) {
+func NewRedis(ctx context.Context) (*redis.Client, error) {
 	if err := env.Check(EnvHost, EnvPort); err != nil {
 		return nil, err
 	}
@@ -25,7 +26,7 @@ func NewRedis() (*redis.Client, error) {
 		return nil, err
 	}
 
-	return redis.NewClient(&redis.Options{
+	client := redis.NewClient(&redis.Options{
 		Network:         "tcp",
 		Addr:            fmt.Sprintf("%s:%d", os.Getenv(EnvHost), port),
 		DB:              1,
@@ -35,5 +36,6 @@ func NewRedis() (*redis.Client, error) {
 		DialTimeout:     time.Second * 2,
 		ReadTimeout:     time.Second * 2,
 		WriteTimeout:    time.Second * 2,
-	}), nil
+	})
+	return client, client.Ping(ctx).Err()
 }

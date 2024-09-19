@@ -26,10 +26,11 @@ func Command() *cobra.Command {
 			}
 			defer db.Close()
 
-			redisClient, err := redis.NewRedis()
+			redisClient, err := redis.NewRedis(cmd.Context())
 			if err != nil {
 				return err
 			}
+			defer redisClient.Close()
 
 			e := echo.New()
 			e.Logger.SetOutput(os.Stdout)
