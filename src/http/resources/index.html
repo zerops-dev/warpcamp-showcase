@@ -1,10 +1,21 @@
 <html>
 <head>
     <title>Warpcamp demo</title>
+    <style>
+        .green {
+            color: green;
+        }
+        .red {
+            color: red;
+        }
+    </style>
 </head>
 <body>
-<h1>Connected</h1>
+<h1>Warpcamp showcase</h1>
+<span>Status: <span id="status" class="red">disconnected</span></span>
+<br/>
 <textarea id="input" placeholder="message"></textarea>
+<br/>
 <button onclick="send()">Send</button>
 <div id="display"></div>
 <script>
@@ -16,8 +27,11 @@
 
     let inputElement = document.getElementById("input");
     let displayElement = document.getElementById("display");
+    let statusElement = document.getElementById("status");
 
     ws.onopen = (e) => {
+        statusElement.innerText = "connected";
+        statusElement.setAttribute("class", "green");
         console.log("opened", e);
     };
     ws.onmessage = (e) => {
@@ -28,7 +42,9 @@
         displayElement.appendChild(document.createElement("br"));
     };
     ws.onclose = (e) => {
-      console.log("closed", e);
+        statusElement.innerText = "disconnected";
+        statusElement.setAttribute("class", "red");
+        console.log("closed", e);
     };
 
 
