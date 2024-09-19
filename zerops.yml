@@ -6,10 +6,19 @@ zerops:
         - go build -o app main.go
       deployFiles: app
     run:
-      base: go@1
+      base: alpine@latest
       ports:
         - port: 8080
           httpSupport: true
       initCommands:
         - zsc execOnce ${ZEROPS_appVersionId} -- ./app migrate up
       start: ./app http
+      envVariables:
+        DB_HOST: ${pgdb_hostname}
+        DB_PORT: ${pgdb_port}
+        DB_USER: ${pgdb_user}
+        DB_PASS: ${pgdb_password}
+        DB_DATABASE: ${pgdb_hostname}
+        HTTP_ADDRESS: :8080
+        REDIS_HOST: ${valkey_hostname}
+        REDIS_PORT: ${valkey_port}
